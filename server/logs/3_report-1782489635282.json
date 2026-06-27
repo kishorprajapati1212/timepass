@@ -1,0 +1,179 @@
+{
+  "timestamp": "2026-06-26T16:00:35.282Z",
+  "baseUrl": "https://3000-firebase-impacthon-1768648789549.cluster-xpmcxs2fjnhg6xvn446ubtgpio.cloudworkstations.dev/",
+  "total": 32,
+  "passed": 27,
+  "failed": 5,
+  "successRate": "84.38%",
+  "results": [
+    {
+      "name": "Create Admin",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Admin Login",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Faculty",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Faculty Login",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Department",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Departments",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Subject",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Subjects",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Section",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Sections",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Student",
+      "status": "FAILED",
+      "error": "Request failed with status code 400"
+    },
+    {
+      "name": "Student Login",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Create Faculty-Subject-Section",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Faculty Assignments",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Start Lecture",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Live QR",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Mark Attendance",
+      "status": "FAILED",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "name": "Duplicate Attendance Prevention",
+      "status": "FAILED",
+      "error": "Duplicate attendance returns 400: Expected status 400, got 404"
+    },
+    {
+      "name": "Get Lecture Attendance",
+      "status": "FAILED",
+      "error": "One student marked present: Expected 1, got 0"
+    },
+    {
+      "name": "Student Report",
+      "status": "FAILED",
+      "error": "Request failed with status code 404"
+    },
+    {
+      "name": "Lecture Summary",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Faculty Dashboard",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Download Excel",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Upload to Cloud",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Saved Reports",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "End Lecture",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get All Faculty",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get All Students",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Get Faculty Profile",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Invalid Login",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Unauthorized Access",
+      "status": "PASSED",
+      "error": null
+    },
+    {
+      "name": "Role-Based Access Control",
+      "status": "PASSED",
+      "error": null
+    }
+  ],
+  "testStore": {
+    "adminId": "6a3ea1f736e484f1393632cf",
+    "facultyId": "6a3ea1fb36e484f1393632d2",
+    "studentId": "6a3ea20536e484f1393632d6",
+    "departmentId": "6a3ea1fe36e484f1393632d3",
+    "subjectId": "6a3ea20036e484f1393632d4",
+    "sectionId": "6a3ea20236e484f1393632d5",
+    "lectureSessionId": "6a3ea20b36e484f1393632d9"
+  }
+}
