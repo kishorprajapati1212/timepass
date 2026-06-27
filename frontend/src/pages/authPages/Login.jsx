@@ -23,14 +23,14 @@ export default function Login() {
         email: data.email,
         password: data.password,
       });
-
+      const payload = res.data
       const userData = {
-        token: res.data.token,
+        token: payload.token,
         user: {
           role: role,
-          id: role === "student" ? res.data.student._id : res.data.user.id,
-          name: role === "student" ? res.data.student.name : res.data.user.name,
-          email: role === "student" ? res.data.student.email : res.data.user.email,
+          id: role === "student" ? payload._id : payload._id,
+          name: role === "student" ? payload.name : payload.name,
+          email: role === "student" ? payload.email : payload.email,
         },
       };
 

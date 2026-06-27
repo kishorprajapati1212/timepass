@@ -25,18 +25,15 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    credentials: true,
-  })
+  cors()
 );
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "1000mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Rate limiting for auth
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
+  windowMs: 15 * 60 * 10,
+  max: 2000,
   message: { success: false, message: "Too many attempts, try again later" },
   standardHeaders: true,
   legacyHeaders: false,
@@ -57,9 +54,13 @@ app.get("/health", (req, res) => {
 });
 
 // Rate limit auth routes
-app.use("/admin/login", authLimiter);
-app.use("/faculty/login", authLimiter);
-app.use("/student/login", authLimiter);
+// app.use("/admin/login", authLimiter);
+// app.use("/faculty/login", authLimiter);
+// app.use("/student/login", authLimiter);
+
+// app.use("/admin/login");
+// app.use("/faculty/login");
+// app.use("/student/login");
 
 // API Routes
 app.use(adminRoutes);

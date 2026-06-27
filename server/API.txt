@@ -1,0 +1,53 @@
+1. ADMIN ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/admin/create	Public	{ name, email, password, employeeId, phone }	{ success, message, data: { _id, name, email, role, employeeId, token } }
+POST	/admin/login	Public	{ email, password }	{ success, message, data: { _id, name, email, role, employeeId, token } }
+2. FACULTY ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/faculty/create	Admin	{ name, email, password, employeeId, departmentId, designation, phone, specialization }	{ success, message, data: { _id, name, email, role, employeeId, designation, token } }
+POST	/faculty/login	Public	{ email, password }	{ success, message, data: { _id, name, email, role, employeeId, department, token } }
+GET	/faculty	Admin	-	{ success, count, data: [{ userId: {name, email}, employeeId, departmentId, ... }] }
+GET	/faculty/me	Faculty	-	{ success, data: { userId: {name, email}, employeeId, departmentId, ... } }
+3. STUDENT ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/student/create	Admin	{ name, email, password, rollNumber, sectionId, departmentId, enrollmentYear, semester, phone, parentPhone }	{ success, message, data: { _id, name, email, role, rollNumber, semester, token } }
+POST	/student/login	Public	{ email, password }	{ success, message, data: { _id, name, email, role, rollNumber, section, department, semester, token } }
+GET	/students	Admin/Faculty	-	{ success, count, data: [{ userId: {name, email}, rollNumber, sectionId, departmentId, semester, ... }] }
+4. ACADEMICS ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/subject/create	Admin	{ subjectName, subjectCode, departmentId, credits, semester }	{ success, message, data: subject }
+GET	/subjects	Public	-	{ success, count, data: [{ _id, subjectName, subjectCode, credits, semester, departmentId }] }
+POST	/department/create	Admin	{ name, code, description }	{ success, message, data: department }
+GET	/departments	Admin	-	{ success, count, data: departments }
+GET	/department/:id	Admin	-	{ success, data: department }
+POST	/section/create	Admin	{ name, departmentId, semester, batchYear }	{ success, message, data: section }
+GET	/sections	Admin	-	{ success, count, data: [{ _id, name, departmentId, semester, batchYear }] }
+5. MAPPING ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/faculty-subject-section	Admin	{ facultyId, subjectId, sectionId, academicYear, semester }	{ success, message, data: assignment }
+GET	/faculty/assignments	Faculty/Admin	-	{ success, data: [{ subjectId: {subjectName, subjectCode}, sectionId: {name, semester}, ... }] }
+6. LECTURE ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/lecture/start	Faculty/Admin	{ subjectId, sectionId, topic, description, location: {latitude, longitude}, attendanceWindow }	{ success, message, data: { lectureSessionId, qrCode, qrExpiresAt, topic, startTime, status } }
+POST	/lecture/end	Faculty/Admin	{ lectureSessionId }	{ success, message, data: { lectureSessionId, duration, totalMarked } }
+GET	/lecture/live-qr/:lectureSessionId	Faculty/Admin	-	{ success, data: { lectureSessionId, qrCode, qrExpiresAt, timeRemaining } }
+7. ATTENDANCE ROUTES
+Table
+Method	Endpoint	Auth	Request Body	Response
+POST	/student/mark	Student	{ qrData, location: {latitude, longitude} }	{ success, message, data: { attendanceId, status, markedAt, lectureTopic } }
+GET	/lecture/:lectureSessionId	Faculty/Admin	-	{ success, data: { lecture, summary, attendances } }
+8. REPORT ROUTES
+Table
+Method	Endpoint	Auth	Response
+GET	/api/report/student/my-attendance	Student	{ success, data: { summary: {totalLectures, present, absent, percentage}, subjectBreakdown: [{subject, total, present}], details: [...] } }
+GET	/api/report/lecture/:id/summary	Faculty/Admin	{ success, data: { lectureInfo, summary, students } }
+GET	/api/report/faculty/dashboard	Faculty	{ success, data: { stats: {totalLectures, activeLectures, completedLectures}, recentLectures: [...] } }
+GET	/api/report/lecture/:id/download	Faculty/Admin	Excel file download
+POST	/api/report/lecture/:id/upload	Faculty/Admin	{ success, message, data: { downloadUrl, publicId } }
+GET	/api/report/saved-reports	Faculty/Admin	{ success, count, data: reports }
