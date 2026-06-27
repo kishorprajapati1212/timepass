@@ -1,2 +1,0 @@
-in login component backend expects enrollment as userId but frontedn is sending email as userID.
-Backend is not sending token but frontend is expecting the token.

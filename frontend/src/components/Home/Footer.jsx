@@ -1,18 +1,12 @@
-import React from 'react'
-
-const Footer = () => {
-  return (
-    <footer className="relative z-10 border-t border-white/5 py-12 text-slate-500 text-sm">
-          <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
-              <p>© 2026 AttendX. Built for the modern educator. ⚡</p>
-              <div className="flex gap-8">
-                  <a href="#" className="hover:text-white transition">Privacy</a>
-                  <a href="#" className="hover:text-white transition">Terms</a>
-                  <a href="#" className="hover:text-white transition">Support</a>
-              </div>
-          </div>
-        </footer>
-  )
-}
-
-export default Footer
+const Footer = () => (
+  <footer id="contact" className="border-t border-slate-800/50 py-10 px-4 sm:px-6">
+    <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex items-center gap-2">
+        <h1 className="text-xl font-black tracking-tight">Attend<span className="text-cyan-400">X</span></h1>
+        <span className="text-slate-600 text-sm">| Smart Attendance</span>
+      </div>
+      <p className="text-slate-500 text-sm">&copy; {new Date().getFullYear()} AttendX. All rights reserved.</p>
+    </div>
+  </footer>
+);
+export default Footer;

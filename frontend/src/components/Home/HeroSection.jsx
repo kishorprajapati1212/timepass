@@ -1,107 +1,50 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import {
-  ShieldCheck,
-  PlayCircle,
-} from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, QrCode, Users, BarChart3 } from "lucide-react";
 const HeroSection = () => {
+  const navigate = useNavigate();
   return (
-    <section className="relative z-10 px-8 sm:px-16 pt-32 pb-20 md:pt-40 md:pb-32">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-
-            {/* LEFT CONTENT */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold tracking-[0.2em] uppercase">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                </span>
-                Next-Gen Smart Attendance
+    <section className="relative pt-32 pb-20 px-4 sm:px-6 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-6">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" /> Smart Attendance System
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6">Attendance <br /><span className="text-gradient">Made Simple</span></h1>
+            <p className="text-lg text-slate-400 mb-8 max-w-lg leading-relaxed">Modern QR-based attendance tracking for educational institutions. Real-time insights, automated reports, and seamless management.</p>
+            <div className="flex flex-wrap gap-4">
+              <button onClick={() => navigate("/login")} className="btn-primary flex items-center gap-2">Get Started <ArrowRight size={18} /></button>
+              <button onClick={() => navigate("/register")} className="btn-secondary">Create Account</button>
+            </div>
+            <div className="flex gap-8 mt-10">
+              {[{icon:Users,label:"10K+ Students",color:"text-cyan-400"},{icon:QrCode,label:"50K+ Scans",color:"text-blue-400"},{icon:BarChart3,label:"Real-time Data",color:"text-purple-400"}].map((s,i) => (
+                <div key={i} className="flex items-center gap-2"><s.icon size={20} className={s.color} /><span className="text-sm font-medium text-slate-300">{s.label}</span></div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="relative">
+            <div className="relative z-10 glass-card p-6 shadow-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-rose-500" /><div className="w-3 h-3 rounded-full bg-amber-500" /><div className="w-3 h-3 rounded-full bg-emerald-500" /></div>
+                <span className="text-xs text-slate-500">Live Dashboard</span>
               </div>
-
-              <h1 className="text-5xl sm:text-7xl font-black leading-[1.1] tracking-tight text-white">
-                Attendance <br />
-                <span className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                  Without Proxies.
-                </span>
-              </h1>
-
-              <p className="text-slate-400 max-w-lg text-lg sm:text-xl leading-relaxed">
-                Eliminate "buddy-punching" using <span className="text-white border-b border-cyan-500/50">Dynamic Refresh QR</span> technology. Secure, time-sensitive, and classroom-verified.
-              </p>
-
-              <div className="flex flex-wrap gap-5">
-                <Link
-                  to="/login"
-                  className="px-8 py-4 sm:px-10 sm:py-5 rounded-2xl bg-cyan-500 text-black font-black text-lg hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.5)] hover:-translate-y-1 transition-all"
-                >
-                  Enter System
-                </Link>
-                <button className="flex items-center gap-3 px-8 py-4 sm:px-10 sm:py-5 rounded-2xl border border-slate-700 font-bold hover:bg-white/5 transition-all text-white">
-                  <PlayCircle className="text-cyan-400" />
-                  Watch Flow
-                </button>
-              </div>
-            </motion.div>
-
-            {/* RIGHT VISUAL - MOCKUP */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 bg-linear-to-r from-cyan-500 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-              
-              <div className="relative bg-slate-900 border border-white/10 rounded-4xl overflow-hidden shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1000"
-                  alt="Students in classroom"
-                  className="opacity-40 h-100 sm:h-125 w-full object-cover"
-                />
-
-                <div className="absolute inset-0 flex items-center justify-center p-6">
-                  <div className="w-full max-w-md bg-[#020617]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-3xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
-                    <div className="flex justify-between items-center mb-8">
-                      <div>
-                        <h3 className="text-xl font-bold">CS101: Data Structs</h3>
-                        <p className="text-slate-400 text-sm">Dr. Sarah Jenkins</p>
-                      </div>
-                      <div className="px-3 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-md animate-pulse">LIVE</div>
-                    </div>
-                    
-                    <div className="aspect-square bg-white rounded-2xl p-4 flex flex-col items-center justify-center gap-4 relative overflow-hidden group/qr">
-                        <div className="absolute inset-0 bg-cyan-400/10 group-hover/qr:bg-transparent transition-colors"></div>
-                        <img 
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=AttendX-${Date.now()}`} 
-                          alt="QR" 
-                          className="w-40 h-40 mix-blend-multiply" 
-                        />
-                        <span className="text-black font-mono font-bold text-xs tracking-widest uppercase">
-                          Refreshes in <span className="text-red-500">04s</span>
-                        </span>
-                    </div>
+              <div className="space-y-3">
+                {[1,2,3].map(i => (
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center"><QrCode size={18} className="text-cyan-400" /></div>
+                    <div className="flex-1"><div className="h-2.5 w-24 bg-slate-700 rounded mb-1.5" /><div className="h-2 w-16 bg-slate-700/50 rounded" /></div>
+                    <div className="px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium">Present</div>
                   </div>
-                </div>
-
-                <div className="absolute bottom-10 right-6 sm:right-10 bg-white p-4 sm:p-6 rounded-2xl shadow-2xl text-black transform rotate-3 hover:rotate-0 transition-transform hidden sm:block">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Verified Scan Rate</p>
-                  <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black">98.2%</span>
-                    <ShieldCheck className="text-green-500 mb-1" size={20} />
-                  </div>
-                </div>
+                ))}
               </div>
-            </motion.div>
-          </div>
-        </section>
-  )
-}
-
-export default HeroSection
+            </div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/20 blur-[60px] rounded-full" />
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500/20 blur-[60px] rounded-full" />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+export default HeroSection;

@@ -1,78 +1,132 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-import axiosInstance from "../../utils/AxiosInstance";
 import { toast } from "react-toastify";
-import { X, ScanLine } from "lucide-react";
+import { X, ScanLine, CheckCircle, AlertCircle, Camera, CameraOff } from "lucide-react";
+import { motion } from "framer-motion";
+import axiosInstance from "../../utils/axios.js";
 
 const QRScanner = ({ onBack }) => {
+  const [scanning, setScanning] = useState(false);
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [cameraError, setCameraError] = useState(null);
+  const [hasPermission, setHasPermission] = useState(false);
+  const scannerRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const scanner = new Html5Qrcode("reader");
-    scanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      async (decodedText) => {
-        try {
-          await scanner.stop();
-          setLoading(true);
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              try {
-                await axiosInstance.post("/student/mark", {
-                  qrData: decodedText,
-                  location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                  },
-                });
-                toast.success("Attendance marked successfully!");
-                onBack();
-              } catch (err) {
-                toast.error(err.response?.data?.message || "Error marking attendance");
-                setTimeout(onBack, 2000);
-              }
-            },
-            () => {
-              toast.error("Location permission required");
-              onBack();
-            }
-          );
-        } catch (err) {
-          toast.error("Invalid QR Code");
-          onBack();
-        } finally {
-          setLoading(false);
-        }
-      }
-    ).catch(err => console.error("Scanner start error", err));
+    requestCameraPermission();
+    return () => { stopScanner(); };
+  }, []);
 
-    return () => {
-      scanner.stop().catch(() => {});
-    };
-  }, [onBack]);
+  const requestCameraPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+      stream.getTracks().forEach(track => track.stop());
+      setHasPermission(true);
+      setCameraError(null);
+      startScanner();
+    } catch (err) {
+      console.error("Camera permission error:", err);
+      setHasPermission(false);
+      setCameraError("Camera access denied. Please allow camera permissions in your browser settings.");
+      toast.error("Camera access denied. Please allow camera permissions.");
+    }
+  };
+
+  const startScanner = async () => {
+    try {
+      if (scannerRef.current) {
+        await scannerRef.current.stop().catch(() => {});
+        scannerRef.current = null;
+      }
+
+      const scanner = new Html5Qrcode("qr-reader");
+      scannerRef.current = scanner;
+
+      await scanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        (decodedText) => { handleScan(decodedText); },
+        () => {}
+      );
+      setScanning(true);
+    } catch (err) {
+      console.error("Scanner start error:", err);
+      setCameraError("Failed to start camera scanner. " + err.message);
+      toast.error("Failed to start camera scanner");
+    }
+  };
+
+  const stopScanner = async () => {
+    setScanning(false);
+    if (scannerRef.current) {
+      try { await scannerRef.current.stop(); } catch (e) {}
+      try { await scannerRef.current.clear(); } catch (e) {}
+      scannerRef.current = null;
+    }
+  };
+
+  const handleScan = async (data) => {
+    if (loading || result) return;
+    setLoading(true);
+    try {
+      let lectureSessionId = data;
+      try { const parsed = JSON.parse(data); lectureSessionId = parsed.lectureSessionId || parsed.id || data; } catch (e) {}
+      const res = await axiosInstance.post("/student/mark", { lectureSessionId });
+      setResult({ success: true, message: res.data?.message || "Attendance marked!" });
+      toast.success("Attendance marked successfully!");
+    } catch (err) {
+      const msg = err.response?.data?.message || "Failed to mark attendance";
+      setResult({ success: false, message: msg });
+      toast.error(msg);
+    } finally { setLoading(false); }
+  };
+
+  if (result) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="glass-card p-8 text-center max-w-sm w-full">
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${result.success ? "bg-emerald-500/20" : "bg-rose-500/20"}`}>
+            {result.success ? <CheckCircle size={40} className="text-emerald-400" /> : <AlertCircle size={40} className="text-rose-400" />}
+          </div>
+          <h3 className="text-xl font-bold mb-2">{result.success ? "Success!" : "Failed"}</h3>
+          <p className="text-slate-400 mb-6">{result.message}</p>
+          <button onClick={() => { setResult(null); setLoading(false); if (hasPermission) startScanner(); }} className="btn-primary w-full">Scan Again</button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6">
-      <button onClick={onBack} className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full hover:bg-white/20 transition-all">
-        <X size={24} />
-      </button>
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-cyan-500/20 rounded-2xl mb-4">
-          <ScanLine className="text-cyan-400" size={32} />
-        </div>
-        <h2 className="text-2xl font-bold">Ready to Scan</h2>
-        <p className="text-slate-400">Align the QR code within the frame</p>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold flex items-center gap-2"><ScanLine size={22} className="text-cyan-400" /> Scan QR Code</h2>
+        <button onClick={() => { stopScanner(); onBack(); }} className="p-2 rounded-lg hover:bg-slate-800/50 text-slate-400 hover:text-white transition-colors"><X size={20} /></button>
       </div>
-      <div id="reader" className="w-full max-w-xs overflow-hidden rounded-3xl border-2 border-cyan-500/50 shadow-[0_0_50px_rgba(6,182,212,0.2)]"></div>
-      {loading && (
-        <div className="mt-8 flex flex-col items-center">
-          <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-2 text-cyan-400 font-medium">Validating your location...</p>
+
+      {!hasPermission || cameraError ? (
+        <div className="glass-card p-8 text-center">
+          <CameraOff size={48} className="mx-auto text-rose-400 mb-4" />
+          <h3 className="text-lg font-bold mb-2">Camera Access Required</h3>
+          <p className="text-slate-400 text-sm mb-4">{cameraError || "Please allow camera access to scan QR codes."}</p>
+          <button onClick={requestCameraPermission} className="btn-primary flex items-center gap-2 mx-auto">
+            <Camera size={18} /> Allow Camera
+          </button>
+        </div>
+      ) : (
+        <div className="glass-card p-4 overflow-hidden">
+          <div id="qr-reader" style={{ width: "100%", minHeight: "300px" }} />
+          {!scanning && (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin" />
+            </div>
+          )}
         </div>
       )}
+
+      <p className="text-center text-slate-500 text-sm">Point your camera at the QR code displayed by your faculty</p>
     </div>
   );
 };
-
 export default QRScanner;
